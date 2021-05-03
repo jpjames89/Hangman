@@ -1,0 +1,66 @@
+import random, sys
+from random import choice
+from typing import List
+
+movie_tv = ['die hard', 'halloween', 'avatar', 'star wars', 'jurassic park', 'the lord of the rings', 'mortal kombat',
+            'lost', 'game of thrones', 'breaking bad', 'buffy the vampire slayer', 'lucifer', 'new girl', 'stranger things']
+
+guesses = []
+secret = random.choice(movie_tv)
+length = len(secret)
+
+letter_stored = []
+
+def word_guess(letters: List):
+    """Print current word to guess"""
+    print('The word is {0}'.format(" ".join(letters)))
+
+def letters_guessed(current: int, total: int):
+    """Prints how many choices the player has used"""
+    print("You are on guess: {0}/{1}.".format(current,total))
+
+def game_start():
+    """Getting ready to start the game"""
+    name = input('What is your name: ')
+    print(f'Lets play Hangman, {name.title()}!')
+
+def secret_word():
+    """Preparing secret word for game"""
+    for character in secret:
+        guesses.append("-")
+    print(f'The word has {length} letters in it.')
+    word_guess(guesses)
+
+def guessing_word():
+    """Main game"""
+    guess_taken = 1
+    max_guess = 10
+    letters_guessed(guess_taken, max_guess)
+
+    while guess_taken < max_guess:
+        guess = input("Pick a letter: ")
+        if guess in letter_stored:
+            print("You have already guessed that letter.")
+        else:
+            letter_stored.append(guess)
+            if guess in secret:
+                print('That is correct!\n')
+                for i in range(0, length):
+                    if secret[i] == guess:
+                        guesses[i] = guess
+                word_guess(guesses)
+                letters_guessed(guess_taken, max_guess)
+                if not '-' in (guesses):
+                    print('You won!')
+                    break
+            else:
+                print('Letter is not in the word.  Please try again.\n')
+                guess_taken += 1
+                letters_guessed(guess_taken, max_guess)
+                if guess_taken == 10:
+                    print('Sorry.  You have lost!  The word was {0}'.format(secret))
+
+if __name__ == '__main__':
+    game_start()
+    secret_word()
+    guessing_word()
